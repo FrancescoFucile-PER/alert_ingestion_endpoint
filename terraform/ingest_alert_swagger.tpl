@@ -27,7 +27,8 @@ paths:
             Access-Control-Allow-Origin:
               type: "string"
       security:
-        - api_key: []
+      - auth: []
+      - api_key: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${ingest_alert_lambda_arn}/invocations"
         responses:
@@ -70,6 +71,16 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "mock"
 securityDefinitions:
+  auth:
+    type: "apiKey"
+    name: "apiGatewayKey"
+    in: "query"
+    x-amazon-apigateway-authtype: "custom"
+    x-amazon-apigateway-authorizer:
+      type: "request"
+      authorizerUri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:449876668362:function:ingest_alert_authenticator/invocations"
+      authorizerResultTtlInSeconds: 0
+      identitySource: "method.request.querystring.apiGatewayKey"
   api_key:
     type: "apiKey"
     name: "x-api-key"
