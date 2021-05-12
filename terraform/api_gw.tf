@@ -26,6 +26,7 @@ resource "aws_api_gateway_stage" "default" {
 resource "aws_api_gateway_rest_api" "api" {
   name = var.deployment_name  // consistency!
   body = data.template_file.ingest_alert_template.rendered
+  api_key_source = "AUTHORIZER"
 }
 
 resource "aws_api_gateway_deployment" "api_deployment" {
