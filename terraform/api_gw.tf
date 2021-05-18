@@ -38,11 +38,6 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 
 }
 
-# API key for tracking endpoint.
-resource "aws_api_gateway_api_key" "tracking_api_key" {
-  name = "${var.deployment_name}_api_key"
-}
-
 resource "aws_api_gateway_usage_plan" "api_usage_plan" {
   depends_on = [
     aws_api_gateway_rest_api.api]
@@ -53,10 +48,6 @@ resource "aws_api_gateway_usage_plan" "api_usage_plan" {
   }
 }
 
-resource "aws_api_gateway_usage_plan_key" "integration_api_key_usage_plan" {
-  depends_on = [
-    aws_api_gateway_usage_plan.api_usage_plan]
-  key_id = aws_api_gateway_api_key.tracking_api_key.id
-  key_type = "API_KEY"
-  usage_plan_id = aws_api_gateway_usage_plan.api_usage_plan.id
+output "usage_plan_id" {
+  value = aws_api_gateway_usage_plan.api_usage_plan.id
 }
